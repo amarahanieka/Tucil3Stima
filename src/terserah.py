@@ -28,8 +28,8 @@ def vertexCoordinate(arrFile):
             if (j != 0):
                 coordinate.append(arrVertexCor[i][j])
         arrCoordinate.append(coordinate)
-    vertexCoordinate = zip(arrVertex,arrCoordinate)
-    return list(vertexCoordinate)
+    vertexCoordinate = dict(zip(arrVertex,arrCoordinate))
+    return vertexCoordinate
 
 def makeListVertex(arrFile):
     arrVertexCor = []
@@ -43,19 +43,34 @@ def makeListVertex(arrFile):
     return arrVertex
 
 def makeMatrix(arrFile):
-    i = 1
-    while (i < int(arrFile[0])+1):
-        arrFile.remove(arrFile[i])
+    i = int(arrFile[0])+1
+    arrMatrix = []
+    while (i < int(arrFile[0])*2+1):
+        arrMatrix.append(arrFile[i].split())
         i += 1
-    return arrFile
+    return arrMatrix
 
+def makeGraph(arrMatrix, arrVertex):
+    arrTetangga = []
+    for i in range(len(arrMatrix)):
+        vertex = []
+        for j in range(len(arrMatrix[i])):
+            if (arrMatrix[i][j] == '1'):
+                vertex.append(arrVertex[j])
+        arrTetangga.append(vertex)
+    dictGraph = dict(zip(arrVertex,arrTetangga))
+    return dictGraph
 # main program
 namaFile = "../test/tes.txt"
 arrFile = readFile(namaFile)
 arrVertexCoordinate = vertexCoordinate(arrFile)
-print(arrVertexCoordinate)
+# print(arrVertexCoordinate)
 arrVertex = makeListVertex(arrFile)
-print(arrVertex)
+# print(arrVertex)
 arrMatrix = makeMatrix(arrFile)
-for i in arrMatrix:
-    print(i)
+# for i in arrMatrix:
+#     print(i)
+dictGraph = makeGraph(arrMatrix, arrVertex)
+print(dictGraph)
+
+
