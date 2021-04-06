@@ -93,99 +93,106 @@ def heu(arrVertex, tujuan):
 def fn(dictGraphCost, dictH):
     return (dictGraphCost + dictH)
 
-def bfs(graph, asal, tujuan):
+# def bfs(graph, asal, tujuan):
     
-    visited, queue = set(), collections.deque([asal])
-    visited.add(asal)
-    vertex = ''
-    urutan = []
+#     visited, queue = set(), collections.deque([asal])
+#     visited.add(asal)
+#     vertex = ''
+#     urutan = []
 
-    while queue and str(vertex) != tujuan:
-        # Dequeue a vertex from queue
-        vertex = queue.popleft()
-        # print(str(vertex) + " ", end="\n")
-        urutan.append(str(vertex))
-            # If not visited, mark it as visited, and
-            # enqueue it
-        for tetangga in graph[vertex]:
-            if tetangga not in visited:
-                visited.add(tetangga)
-                queue.append(tetangga)
+#     while queue and str(vertex) != tujuan:
+#         # Dequeue a vertex from queue
+#         vertex = queue.popleft()
+#         # print(str(vertex) + " ", end="\n")
+#         urutan.append(str(vertex))
+#             # If not visited, mark it as visited, and
+#             # enqueue it
+#         for tetangga in graph[vertex]:
+#             if tetangga not in visited:
+#                 visited.add(tetangga)
+#                 queue.append(tetangga)
     
-    # print('visited:', visited)
-    if tujuan not in urutan:
-        print(asal,"&",tujuan,"tidak terhubung.")
-    else:
-        for x in urutan:
-            print(x, end =' ')
+#     # print('visited:', visited)
+#     if tujuan not in urutan:
+#         print(asal,"&",tujuan,"tidak terhubung.")
+#     else:
+#         for x in urutan:
+#             print(x, end =' ')
 
-def astar1(dictGraph, asal, tujuan, dictH, arrVertex):
+# def astar1(dictGraph, asal, tujuan, dictH, arrVertex):
     
-    visited = set()
-    queue = collections.deque([asal])
-    visited.add(asal)
-    vertex = ''
-    urutan = []
+#     visited = set()
+#     queue = collections.deque([asal])
+#     visited.add(asal)
+#     vertex = ''
+#     urutan = []
 
-    while queue and str(vertex) != tujuan:
-        # Dequeue a vertex from queue
-        vertex = queue.popleft()
+#     while queue and str(vertex) != tujuan:
+#         # Dequeue a vertex from queue
+#         vertex = queue.popleft()
         
-        # print(str(vertex), end="\n")
-        urutan.append(str(vertex))
-            # If not visited, mark it as visited, and
-            # enqueue it
+#         # print(str(vertex), end="\n")
+#         urutan.append(str(vertex))
+#             # If not visited, mark it as visited, and
+#             # enqueue it
         
-        for tetangga in dictGraph[vertex]:
-            # print("neighbor:",tetangga)
-            if tetangga not in visited:
-                gnthisneighbor = dictGraph[vertex].index(tetangga)
-                nilaif = fn(dictGraphCost[vertex][gnthisneighbor], dictH[tetangga])
+#         for tetangga in dictGraph[vertex]:
+#             # print("neighbor:",tetangga)
+#             if tetangga not in visited:
+#                 gnthisneighbor = dictGraph[vertex].index(tetangga)
+#                 nilaif = fn(dictGraphCost[vertex][gnthisneighbor], dictH[tetangga])
                 
-                # print("nilaif:", nilaif)
-                visited.add(tetangga)
-                queue.append(tetangga)
+#                 # print("nilaif:", nilaif)
+#                 visited.add(tetangga)
+#                 queue.append(tetangga)
     
-    # print('visited:', visited)
-    if tujuan not in urutan:
-        print(asal,"&",tujuan,"tidak terhubung.")
-    else:
-        for x in urutan:
-            print(x, end =' ')
-    print("")
+#     # print('visited:', visited)
+#     if tujuan not in urutan:
+#         print(asal,"&",tujuan,"tidak terhubung.")
+#     else:
+#         for x in urutan:
+#             print(x, end =' ')
+#     print("")
 
-def astar2(dictGraph, dictH, asal, tujuan, dictGraphCost):
+def astar(dictGraph, dictH, asal, tujuan, dictGraphCost):
     opened = []
     closed = []
     opened.append(asal)
     print(opened)
-    i = 0;
-    nilaign = 0;
+    i = 0
+    nilaign = 0
+    nilaifn = []
+    for j in range(len(dictGraphCost[opened[0]])):
+        nilaifn.append(fn(dictGraphCost[opened[0]][j],dictH[dictGraph[opened[0]][j]]))
+    # print("nilaifn:", nilaifn)
+
     while opened != tujuan and i <= len(dictGraph):
-        nilaifn = []
-        for j in range(len(dictGraphCost[opened[0]])):
-            nilaifn.append(fn(dictGraphCost[opened[0]][j],dictH[dictGraph[opened[0]][j]]))
-        print("nilaifn:", nilaifn)
-        print("nilaian", dictGraph[opened[0]])
+        # print("nilaian", dictGraph[opened[0]])
         minfn = nilaifn.index(min(nilaifn))
-        print("minfn:",minfn)
+        # print("minfn:",minfn)
+        nilaign += nilaifn[minfn]
         selanjutnya = dictGraph[opened[0]][minfn]
-        print("Closed:",closed)
+        # print("Closed:",closed)
         if selanjutnya in closed:
             nilaifn.pop(dictGraph[opened[0]].index(selanjutnya))
+            dictGraph[opened[0]].pop(dictGraph[opened[0]].index(selanjutnya))
             minfn = nilaifn.index(min(nilaifn))
             selanjutnya = dictGraph[opened[0]][minfn]
-        print("selanjutnya:",selanjutnya)
+        # print("selanjutnya:",selanjutnya)
         curr = opened.pop(0)
-        print("curr:",curr)
+        # print("curr:",curr)
         closed.append(curr)
         opened.append(selanjutnya)
-        print("o:",opened)
+        # print("o:",opened)
         if curr == tujuan:
             break
         else:
             i += 1
-    print("Closed:",closed)
+            nilaifn = []
+            for j in range(len(dictGraphCost[opened[0]])):
+                nilaifn.append(fn(nilaign,dictH[dictGraph[opened[0]][j]]))
+            # print("nilaifn:", nilaifn)
+    return closed
 
 
 
@@ -222,8 +229,8 @@ if __name__ == '__main__':
     dictH = heu(arrVertex, tujuan)
     # print("dictH:",dictH)
 
-    bfs(dictGraph, asal, tujuan)
-    print("\n----------------")
-    astar1(dictGraph,asal,tujuan,dictH,arrVertex)
-    print("----------------")
-    astar2(dictGraph,dictH,asal,tujuan,dictGraphCost)
+    # bfs(dictGraph, asal, tujuan)
+    # print("\n----------------")
+    # astar1(dictGraph,asal,tujuan,dictH,arrVertex)
+    # print("----------------")
+    astar(dictGraph,dictH,asal,tujuan,dictGraphCost)
