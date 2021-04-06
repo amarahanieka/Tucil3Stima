@@ -39,7 +39,7 @@ def vertexCoordinate(arrFile):
         arrCoordinate.append(coordinate)
     for i in range(len(arrCoordinate)):
         for j in range(2):
-            arrCoordinate[i][j] = int(arrCoordinate[i][j])
+            arrCoordinate[i][j] = float(arrCoordinate[i][j])
     vertexCoordinate = dict(zip(arrVertex,arrCoordinate))
     return vertexCoordinate
 
@@ -99,40 +99,40 @@ def astar(dictGraph, dictH, asal, tujuan, dictGraphCost):
     opened = []
     closed = []
     opened.append(asal)
-    # print(opened)
     i = 0
     nilaign = 0
     nilaifn = []
     for j in range(len(dictGraphCost[opened[0]])):
         nilaifn.append(fn(dictGraphCost[opened[0]][j],dictH[dictGraph[opened[0]][j]]))
-    # print("nilaifn:", nilaifn)
-
-    while opened != tujuan and i <= len(dictGraph):
-        # print("nilaian", dictGraph[opened[0]])
-        minfn = nilaifn.index(min(nilaifn))
-        # print("minfn:",minfn)
+    curr = ''
+    while not (curr == tujuan):
+        if (len(nilaifn) > 1):
+            minfn = nilaifn.index(min(nilaifn))
+        else:
+            minfn = 0
         nilaign += dictGraphCost[opened[0]][minfn]
         selanjutnya = dictGraph[opened[0]][minfn]
-        # print("Closed:",closed)
+        print("Closed:",closed)
         if selanjutnya in closed:
             nilaifn.pop(dictGraph[opened[0]].index(selanjutnya))
-            dictGraph[opened[0]].pop(dictGraph[opened[0]].index(selanjutnya))
-            minfn = nilaifn.index(min(nilaifn))
-            selanjutnya = dictGraph[opened[0]][minfn]
-        # print("selanjutnya:",selanjutnya)
+            hei = dictGraph[opened[0]].pop(dictGraph[opened[0]].index(selanjutnya))
+            if (len(nilaifn) > 1):
+                minfn = nilaifn.index(min(nilaifn))
+                selanjutnya = dictGraph[opened[0]][minfn]
+            else:
+                selanjutnya = hei
         curr = opened.pop(0)
-        # print("curr:",curr)
         closed.append(curr)
         opened.append(selanjutnya)
-        # print("o:",opened)
         if curr == tujuan:
             break
         else:
+            
             i += 1
             nilaifn = []
             for j in range(len(dictGraphCost[opened[0]])):
                 nilaifn.append(fn(nilaign,dictH[dictGraph[opened[0]][j]]))
-            # print("nilaifn:", nilaifn)
+            print("nilaifnnn:", nilaifn)
     return closed
 
 def redEdges(hasil):
@@ -155,8 +155,8 @@ def redEdges(hasil):
 
 # main program
 if __name__ == '__main__':
-    
-    namaFile = "../test/itb2.txt"
+    filegraf = input("Masukkan nama file graf tanpa extension: ")
+    namaFile = "../test/"+filegraf+".txt"
     arrFile = readFile(namaFile)
 
     #prep
@@ -184,14 +184,13 @@ if __name__ == '__main__':
         tujuan = input("Masukkan lokasi tujuan: ")
     
     dictH = heu(arrVertex, tujuan)
-    # print("dictH:",dictH)
 
-    # bfs(dictGraph, asal, tujuan)
-    # print("\n----------------")
-    # astar1(dictGraph,asal,tujuan,dictH,arrVertex)
-    # print("----------------")
     hasil = astar(dictGraph,dictH,asal,tujuan,dictGraphCost)
-    print(hasil)
+    jarak = 0
+    for i in range(len(hasil)-1):
+        jarak += dictGraphCost[hasil[i]][dictGraph[hasil[i]].index(hasil[i+1])]
+    print("Hasil:", hasil)
+    print("Jarak:", jarak)
     
     g = nx.Graph()
     for i in dictGraph:
