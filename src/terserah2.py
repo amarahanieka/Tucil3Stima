@@ -1,4 +1,5 @@
 # tucil3 :))
+import collections
 
 def readFile(namaFile):
     arrFile = []
@@ -89,12 +90,109 @@ def heu(arrVertex, tujuan):
     dictH = dict(zip(arrVertex, nilaih))
     return dictH
         
+def fn(dictGraphCost, dictH):
+    return (dictGraphCost + dictH)
+
+def bfs(graph, asal, tujuan):
+    
+    visited, queue = set(), collections.deque([asal])
+    visited.add(asal)
+    vertex = ''
+    urutan = []
+
+    while queue and str(vertex) != tujuan:
+        # Dequeue a vertex from queue
+        vertex = queue.popleft()
+        # print(str(vertex) + " ", end="\n")
+        urutan.append(str(vertex))
+            # If not visited, mark it as visited, and
+            # enqueue it
+        for tetangga in graph[vertex]:
+            if tetangga not in visited:
+                visited.add(tetangga)
+                queue.append(tetangga)
+    
+    # print('visited:', visited)
+    if tujuan not in urutan:
+        print(asal,"&",tujuan,"tidak terhubung.")
+    else:
+        for x in urutan:
+            print(x, end =' ')
+
+def astar1(dictGraph, asal, tujuan, dictH, arrVertex):
+    
+    visited = set()
+    queue = collections.deque([asal])
+    visited.add(asal)
+    vertex = ''
+    urutan = []
+
+    while queue and str(vertex) != tujuan:
+        # Dequeue a vertex from queue
+        vertex = queue.popleft()
+        
+        # print(str(vertex), end="\n")
+        urutan.append(str(vertex))
+            # If not visited, mark it as visited, and
+            # enqueue it
+        
+        for tetangga in dictGraph[vertex]:
+            # print("neighbor:",tetangga)
+            if tetangga not in visited:
+                gnthisneighbor = dictGraph[vertex].index(tetangga)
+                nilaif = fn(dictGraphCost[vertex][gnthisneighbor], dictH[tetangga])
+                
+                # print("nilaif:", nilaif)
+                visited.add(tetangga)
+                queue.append(tetangga)
+    
+    # print('visited:', visited)
+    if tujuan not in urutan:
+        print(asal,"&",tujuan,"tidak terhubung.")
+    else:
+        for x in urutan:
+            print(x, end =' ')
+    print("")
+
+def astar2(dictGraph, dictH, asal, tujuan, dictGraphCost):
+    opened = []
+    closed = []
+    opened.append(asal)
+    print(opened)
+    i = 0;
+    nilaign = 0;
+    while opened != tujuan and i <= len(dictGraph):
+        nilaifn = []
+        for j in range(len(dictGraphCost[opened[0]])):
+            nilaifn.append(fn(dictGraphCost[opened[0]][j],dictH[dictGraph[opened[0]][j]]))
+        print("nilaifn:", nilaifn)
+        print("nilaian", dictGraph[opened[0]])
+        minfn = nilaifn.index(min(nilaifn))
+        print("minfn:",minfn)
+        selanjutnya = dictGraph[opened[0]][minfn]
+        print("Closed:",closed)
+        if selanjutnya in closed:
+            nilaifn.pop(dictGraph[opened[0]].index(selanjutnya))
+            minfn = nilaifn.index(min(nilaifn))
+            selanjutnya = dictGraph[opened[0]][minfn]
+        print("selanjutnya:",selanjutnya)
+        curr = opened.pop(0)
+        print("curr:",curr)
+        closed.append(curr)
+        opened.append(selanjutnya)
+        print("o:",opened)
+        if curr == tujuan:
+            break
+        else:
+            i += 1
+    print("Closed:",closed)
+
 
 
 # main program
 if __name__ == '__main__':
     
-    namaFile = "../test/tes.txt"
+    namaFile = "../test/itb1.txt"
     arrFile = readFile(namaFile)
 
     #prep
@@ -107,7 +205,7 @@ if __name__ == '__main__':
 
     # print("arrVertexCoordinate: ",arrVertexCoordinate)
     # print("arrvertex:", arrVertex)
-    # print("dictgraph:", dictGraph)
+    # print("dictgraph:", dictGraph) #'Bahasa': ['Perpus', 'CIBE']
     # print("ngetes cek koord:", arrVertexCoordinate["A"][0])
     # print("dictGraphCost: ", dictGraphCost)
 
@@ -122,4 +220,10 @@ if __name__ == '__main__':
         tujuan = input("Masukkan lokasi tujuan: ")
     
     dictH = heu(arrVertex, tujuan)
-    # print(dictH)
+    # print("dictH:",dictH)
+
+    bfs(dictGraph, asal, tujuan)
+    print("\n----------------")
+    astar1(dictGraph,asal,tujuan,dictH,arrVertex)
+    print("----------------")
+    astar2(dictGraph,dictH,asal,tujuan,dictGraphCost)
