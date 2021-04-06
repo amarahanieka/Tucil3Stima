@@ -158,7 +158,7 @@ def astar(dictGraph, dictH, asal, tujuan, dictGraphCost):
     opened = []
     closed = []
     opened.append(asal)
-    print(opened)
+    # print(opened)
     i = 0
     nilaign = 0
     nilaifn = []
@@ -170,7 +170,7 @@ def astar(dictGraph, dictH, asal, tujuan, dictGraphCost):
         # print("nilaian", dictGraph[opened[0]])
         minfn = nilaifn.index(min(nilaifn))
         # print("minfn:",minfn)
-        nilaign += nilaifn[minfn]
+        nilaign += dictGraphCost[opened[0]][minfn]
         selanjutnya = dictGraph[opened[0]][minfn]
         # print("Closed:",closed)
         if selanjutnya in closed:
@@ -199,7 +199,7 @@ def astar(dictGraph, dictH, asal, tujuan, dictGraphCost):
 # main program
 if __name__ == '__main__':
     
-    namaFile = "../test/itb1.txt"
+    namaFile = "../test/itb2.txt"
     arrFile = readFile(namaFile)
 
     #prep
@@ -233,4 +233,5 @@ if __name__ == '__main__':
     # print("\n----------------")
     # astar1(dictGraph,asal,tujuan,dictH,arrVertex)
     # print("----------------")
-    astar(dictGraph,dictH,asal,tujuan,dictGraphCost)
+    hasil = astar(dictGraph,dictH,asal,tujuan,dictGraphCost)
+    print(hasil)
