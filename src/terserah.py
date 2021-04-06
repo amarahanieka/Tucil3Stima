@@ -58,8 +58,11 @@ def makeGraph(arrMatrix, arrVertex):
             if (arrMatrix[i][j] == '1'):
                 vertex.append(arrVertex[j])
         arrTetangga.append(vertex)
-    dictGraph = dict(zip(arrVertex,arrTetangga))
+    dictGraph = list(zip(arrVertex,arrTetangga))
     return dictGraph
+
+
+
 # main program
 namaFile = "../test/tes.txt"
 arrFile = readFile(namaFile)
@@ -71,6 +74,6 @@ arrMatrix = makeMatrix(arrFile)
 # for i in arrMatrix:
 #     print(i)
 dictGraph = makeGraph(arrMatrix, arrVertex)
-print(dictGraph)
+print(dictGraph[0])
 
 

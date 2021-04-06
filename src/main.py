@@ -1,5 +1,7 @@
 # tucil3 :))
 import collections
+import networkx as nx 
+import matplotlib.pyplot as plt
 
 def readFile(namaFile):
     arrFile = []
@@ -93,67 +95,6 @@ def heu(arrVertex, tujuan):
 def fn(dictGraphCost, dictH):
     return (dictGraphCost + dictH)
 
-# def bfs(graph, asal, tujuan):
-    
-#     visited, queue = set(), collections.deque([asal])
-#     visited.add(asal)
-#     vertex = ''
-#     urutan = []
-
-#     while queue and str(vertex) != tujuan:
-#         # Dequeue a vertex from queue
-#         vertex = queue.popleft()
-#         # print(str(vertex) + " ", end="\n")
-#         urutan.append(str(vertex))
-#             # If not visited, mark it as visited, and
-#             # enqueue it
-#         for tetangga in graph[vertex]:
-#             if tetangga not in visited:
-#                 visited.add(tetangga)
-#                 queue.append(tetangga)
-    
-#     # print('visited:', visited)
-#     if tujuan not in urutan:
-#         print(asal,"&",tujuan,"tidak terhubung.")
-#     else:
-#         for x in urutan:
-#             print(x, end =' ')
-
-# def astar1(dictGraph, asal, tujuan, dictH, arrVertex):
-    
-#     visited = set()
-#     queue = collections.deque([asal])
-#     visited.add(asal)
-#     vertex = ''
-#     urutan = []
-
-#     while queue and str(vertex) != tujuan:
-#         # Dequeue a vertex from queue
-#         vertex = queue.popleft()
-        
-#         # print(str(vertex), end="\n")
-#         urutan.append(str(vertex))
-#             # If not visited, mark it as visited, and
-#             # enqueue it
-        
-#         for tetangga in dictGraph[vertex]:
-#             # print("neighbor:",tetangga)
-#             if tetangga not in visited:
-#                 gnthisneighbor = dictGraph[vertex].index(tetangga)
-#                 nilaif = fn(dictGraphCost[vertex][gnthisneighbor], dictH[tetangga])
-                
-#                 # print("nilaif:", nilaif)
-#                 visited.add(tetangga)
-#                 queue.append(tetangga)
-    
-#     # print('visited:', visited)
-#     if tujuan not in urutan:
-#         print(asal,"&",tujuan,"tidak terhubung.")
-#     else:
-#         for x in urutan:
-#             print(x, end =' ')
-#     print("")
-
 def astar(dictGraph, dictH, asal, tujuan, dictGraphCost):
     opened = []
     closed = []
@@ -194,7 +135,23 @@ def astar(dictGraph, dictH, asal, tujuan, dictGraphCost):
             # print("nilaifn:", nilaifn)
     return closed
 
+def redEdges(hasil):
+    newHasil2 = []
+    for i in range(len(hasil)):
+        if (i != 0):
+            newHasil2.append(hasil[i])
+    # print(newHasil2)
 
+    newHasil1 = []
+    for i in range(len(hasil)-1):
+        newHasil1.append(hasil[i])
+    # print(newHasil1)
+    red_edges1 = list(zip(newHasil1,newHasil2))
+    red_edges2 = list(zip(newHasil2,newHasil1))
+    for i in range(len(red_edges2)):
+        red_edges1.append(red_edges2[i])
+    # print(red_edges1)
+    return red_edges1
 
 # main program
 if __name__ == '__main__':
@@ -235,3 +192,13 @@ if __name__ == '__main__':
     # print("----------------")
     hasil = astar(dictGraph,dictH,asal,tujuan,dictGraphCost)
     print(hasil)
+    
+    g = nx.Graph()
+    for i in dictGraph:
+        for j in range(len(dictGraph[i])):
+            g.add_edge(i, dictGraph[i][j], weight=dictGraphCost[i][j])
+
+    red_edges = redEdges(hasil)
+    edge_colors = ['black' if not edge in red_edges else 'red' for edge in g.edges()]
+    nx.draw(g, edge_color = edge_colors, with_labels = True)
+    plt.show()
