@@ -1,5 +1,6 @@
 # tucil3 :))
-import collections
+# import collections
+import math
 
 def readFile(namaFile):
     arrFile = []
@@ -116,7 +117,7 @@ def astar(dictGraph, dictH, asal, tujuan, dictGraphCost):
         nilaign += dictGraphCost[opened[0]][minfn]
         # print("nilaign 2:",nilaign)
         selanjutnya = dictGraph[opened[0]][minfn]
-        print("Closed:",closed)
+        # print("Closed:",closed)
         if selanjutnya in closed:
             nilaifn.pop(dictGraph[opened[0]].index(selanjutnya))
             hei = dictGraph[opened[0]].pop(dictGraph[opened[0]].index(selanjutnya))
@@ -134,15 +135,24 @@ def astar(dictGraph, dictH, asal, tujuan, dictGraphCost):
         if curr == tujuan:
             break
         else:
-            
             i += 1
             nilaifn = []
             for j in range(len(dictGraphCost[opened[0]])):
                 nilaifn.append(fn(nilaign,dictH[dictGraph[opened[0]][j]]))
-            
-            print("nilaifnnn:", nilaifn)
+            # print("nilaifnnn:", nilaifn)
     return closed
 
+def deg2rad(deg):
+    return deg * (math.pi/180)
+
+def jarakdalamkm(lat1,lon1,lat2,lon2):
+  R = 6371; #Radius of the earth in km
+  dLat = deg2rad(lat2-lat1);  #deg2rad below
+  dLon = deg2rad(lon2-lon1); 
+  a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(deg2rad(lat1)) * math.cos(deg2rad(lat2)) * math.sin(dLon/2) * math.sin(dLon/2)
+  c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a)); 
+  d = R * c #Distance in km
+  return d;
 
 
 # main program
@@ -162,9 +172,9 @@ if __name__ == '__main__':
 
     # print("arrVertexCoordinate: ",arrVertexCoordinate)
     # print("arrvertex:", arrVertex)
-    print("dictgraph:", dictGraph) #'Bahasa': ['Perpus', 'CIBE']
+    # print("dictgraph:", dictGraph) #'Bahasa': ['Perpus', 'CIBE']
     # print("ngetes cek koord:", arrVertexCoordinate["A"][0])
-    print("dictGraphCost: ", dictGraphCost)
+    # print("dictGraphCost: ", dictGraphCost)
 
     asal = input("Masukkan lokasi asal: ")
     while asal not in listtempat:
@@ -183,6 +193,8 @@ if __name__ == '__main__':
     jarak = 0
     for i in range(len(hasil)-1):
         # print(hasil.index(hasil[i+1]))
-        jarak += dictGraphCost[hasil[i]][dictGraph[hasil[i]].index(hasil[i+1])]
-    print("Hasil:", hasil)
-    print("Jarak:", jarak)
+        # jarak += dictGraphCost[hasil[i]][dictGraph[hasil[i]].index(hasil[i+1])]
+        jarak += jarakdalamkm(arrVertexCoordinate[hasil[i]][0],arrVertexCoordinate[hasil[i]][1],arrVertexCoordinate[hasil[i+1]][0], arrVertexCoordinate[hasil[i+1]][1])
+    print(*hasil, sep =' -> ')
+    print("Jarak:", jarak,"km")
+
