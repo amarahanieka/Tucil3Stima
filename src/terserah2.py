@@ -157,44 +157,60 @@ def jarakdalamkm(lat1,lon1,lat2,lon2):
 
 # main program
 if __name__ == '__main__':
+    out = False;
     
     filegraf = input("Masukkan nama file graf tanpa extension: ")
     namaFile = "../test/"+filegraf+".txt"
     arrFile = readFile(namaFile)
 
-    #prep
-    arrVertexCoordinate = vertexCoordinate(arrFile)
-    arrVertex = makeListVertex(arrFile)
-    listtempat = set(arrVertex)
-    arrMatrix = makeMatrix(arrFile)
-    dictGraph = makeGraph(arrMatrix, arrVertex)
-    dictGraphCost = makeGraphCost(arrMatrix, arrVertex, arrVertexCoordinate)
+    while (out != True):
+        
 
-    # print("arrVertexCoordinate: ",arrVertexCoordinate)
-    # print("arrvertex:", arrVertex)
-    # print("dictgraph:", dictGraph) #'Bahasa': ['Perpus', 'CIBE']
-    # print("ngetes cek koord:", arrVertexCoordinate["A"][0])
-    # print("dictGraphCost: ", dictGraphCost)
+        #prep
+        arrVertexCoordinate = vertexCoordinate(arrFile)
+        arrVertex = makeListVertex(arrFile)
+        listtempat = set(arrVertex)
+        arrMatrix = makeMatrix(arrFile)
+        dictGraph = makeGraph(arrMatrix, arrVertex)
+        dictGraphCost = makeGraphCost(arrMatrix, arrVertex, arrVertexCoordinate)
 
-    asal = input("Masukkan lokasi asal: ")
-    while asal not in listtempat:
-        print("Tempat tidak tersedia. Masukkan tempat yang sesuai.")
+        # print("arrVertexCoordinate: ",arrVertexCoordinate)
+        # print("arrvertex:", arrVertex)
+        # print("dictgraph:", dictGraph) #'Bahasa': ['Perpus', 'CIBE']
+        # print("ngetes cek koord:", arrVertexCoordinate["A"][0])
+        # print("dictGraphCost: ", dictGraphCost)
+
         asal = input("Masukkan lokasi asal: ")
+        while asal not in listtempat:
+            print("Tempat tidak tersedia. Masukkan tempat yang sesuai.")
+            asal = input("Masukkan lokasi asal: ")
 
-    tujuan = input("Masukkan lokasi tujuan: ")
-    while tujuan not in listtempat:
-        print("Tempat tidak tersedia. Masukkan tempat yang sesuai.")
         tujuan = input("Masukkan lokasi tujuan: ")
-    
-    dictH = heu(arrVertex, tujuan)
-    # print("dictH:",dictH)
+        while tujuan not in listtempat:
+            print("Tempat tidak tersedia. Masukkan tempat yang sesuai.")
+            tujuan = input("Masukkan lokasi tujuan: ")
+        
+        dictH = heu(arrVertex, tujuan)
+        # print("dictH:",dictH)
 
-    hasil = astar(dictGraph,dictH,asal,tujuan,dictGraphCost)
-    jarak = 0
-    for i in range(len(hasil)-1):
-        # print(hasil.index(hasil[i+1]))
-        # jarak += dictGraphCost[hasil[i]][dictGraph[hasil[i]].index(hasil[i+1])]
-        jarak += jarakdalamkm(arrVertexCoordinate[hasil[i]][0],arrVertexCoordinate[hasil[i]][1],arrVertexCoordinate[hasil[i+1]][0], arrVertexCoordinate[hasil[i+1]][1])
-    print(*hasil, sep =' -> ')
-    print("Jarak:", jarak,"km")
-
+        hasil = astar(dictGraph,dictH,asal,tujuan,dictGraphCost)
+        jarak = 0
+        for i in range(len(hasil)-1):
+            # print(hasil.index(hasil[i+1]))
+            # jarak += dictGraphCost[hasil[i]][dictGraph[hasil[i]].index(hasil[i+1])]
+            jarak += jarakdalamkm(arrVertexCoordinate[hasil[i]][0],arrVertexCoordinate[hasil[i]][1],arrVertexCoordinate[hasil[i+1]][0], arrVertexCoordinate[hasil[i+1]][1])
+        print(*hasil, sep =' -> ')
+        print("Jarak:", jarak,"km")
+        print("")
+        lagi = input("Ingin mencoba kembali? Y/N: ")
+        while (lagi != "Y" and lagi != "N"):
+            lagi = input("Input anda salah! Masukan Y/N: ")
+        if (lagi == "Y"):
+            filegraf = input("Masukkan nama file graf tanpa extension: ")
+            namaFile = "../test/"+filegraf+".txt"
+            arrFile = readFile(namaFile)
+        elif (lagi == "N"):
+            print("Terima kasih sudah menggunakan layanan kami!")
+            out = True
+            
+            
