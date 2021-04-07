@@ -8,8 +8,8 @@
 ## General Info
 Program ini dibuat untuk memenuhi salah satu tugas kecil dari mata kuliah Strategi Algoritma IF2211. Program ini dapat menemukan lintasan terpendek dari suatu peta yang berupa graf dengan implementasi algortima A*. Program ini teruji pada MacOS
 ## Technologies
-Python 3.8+
-MacOS
+- Python 3.8+
+- MacOS
 
 ## Setup
 Untuk dapat menjalankan program, pastikan hal-hal berikut sudah terinstall pada local Anda:
